@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fatma'nın Doğum Günü 🎉</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a237e 0%, #8e24aa 50%, #b39ddb 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: scale(0.8);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .card.revealed {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .card h1 {
+            color: #fff;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .card h2 {
+            font-size: 5.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24, #f0932b, #eb4d4b, #6c5ce7, #a29bfe);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: rainbow 3s ease-in-out infinite;
+        }
+
+        @keyframes rainbow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .birthday-message {
+            color: #fff;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .reveal-btn {
+            background: linear-gradient(45deg, #8e24aa, #b39ddb);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .reveal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #1a237e, #8e24aa);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            background: linear-gradient(45deg, #1a237e, #8e24aa);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        .gift-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .gift-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 300px;
+            position: relative;
+            animation: popIn 0.5s ease-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .gift-image {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, #b39ddb, #8e24aa);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 3em;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .cake-animation {
+            font-size: 3em;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .sparkle {
+            position: absolute;
+            color: #fff;
+            font-size: 1.5em;
+            animation: sparkle 1.5s infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .close-card-btn {
+            background: linear-gradient(45deg, #8e24aa, #1a237e);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+        }
+
+        .close-card-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .goodbye-message {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transform: scale(0.8);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            width: 100%;
+            max-width: 350px;
+            display: none;
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .goodbye-message.show {
+            transform: scale(1);
+            opacity: 1;
+            display: block;
+        
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .card h1 {
+                font-size: 2em;
+            }
+            
+            .card h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background music placeholder -->
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="music.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="container">
+        <button class="reveal-btn" id="revealBtn">🎊 Kartı Aç 🎊</button>
+        
+        <div class="card" id="birthdayCard">
+            <div class="sparkle" style="top: 10px; left: 20px;">✨</div>
+            <div class="sparkle" style="top: 20px; right: 30px; animation-delay: 0.5s;">⭐</div>
+            <div class="sparkle" style="bottom: 15px; left: 40px; animation-delay: 1s;">✨</div>
+            
+            <h1>🎉 Doğum Günün Kutlu Olsun! 🎉</h1>
+            <h2>Fatma</h2>
+            
+            <div class="cake-animation">🎂</div>
+            
+            <div class="birthday-message">
+                Merhabaaa,<br><br>
+                Bu özel günde, hayatının her anının güzellik ve mutlulukla dolu olması dileğiyle...<br><br>
+                Yeni yaşın sana sağlık, sevgi ve başarı getirsin!<br><br>
+                Mutlu ve Hep güzel haberler alman dileğiyle <br><br>
+                Doğum günün kutlu olsunnnn! 💜
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn" id="giftBtn">🎁 Hediye</button>
+                <button class="action-btn" id="playlistBtn">🎵 Günün Playlisti</button>
+                <button class="close-card-btn" id="closeCardBtn">💌 Kartı Kapatmayı Unutma</button>
+            </div>
+        </div>
+        
+        <div class="goodbye-message" id="goodbyeMessage">
+            <div style="font-size: 2em; margin-bottom: 20px;">💫</div>
+            Seneye Tekrar Görüşmek Dileğiyle
+            <div style="margin-top: 15px; font-size: 1.1em; color: #b39ddb;">
+                --  Dani
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating confetti button -->
+    <button class="floating-btn" id="confettiBtn">🎊</button>
+
+    <!-- Gift modal -->
+    <div class="gift-modal" id="giftModal">
+        <div class="gift-content">
+            <button class="close-modal" id="closeModal">&times;</button>
+            <h3 style="margin-bottom: 20px; color: #8e24aa;">🎁 Özel Hediye 🎁</h3>
+            <div class="gift-image">
+                <!-- Replace this div with your image -->
+                <img src="image.jpeg" alt="Special Gift" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;">
+            </div>
+            <p style="color: #666; margin-top: 15px;">
+                Bu fotoğrafı bakalım hatırlayacak mısınnn!! 💝
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize background music (commented out - add your music file)
+        
+        window.addEventListener('load', function() {
+            const music = document.getElementById('backgroundMusic');
+            if (music) {
+                music.volume = 0.5;
+                music.play().catch(e => {
+                    console.log('Auto-play prevented by browser');
+                });
+            }
+        });
+        
+
+        // Reveal card animation
+        document.getElementById('revealBtn').addEventListener('click', function() {
+            const card = document.getElementById('birthdayCard');
+            const btn = this;
+            
+            card.classList.add('revealed');
+            btn.style.transform = 'scale(0)';
+            btn.style.opacity = '0';
+            
+            setTimeout(() => {
+                btn.classList.add('hidden');
+            }, 500);
+        });
+
+        // Confetti animation
+        function createConfetti() {
+            const confettiColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7'];
+            const confettiShapes = ['🎊', '🎉', '💖', '⭐', '✨', '🎈', '🤍','🥳'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random choice between colored squares and emoji
+                if (Math.random() < 0.5) {
+                    confetti.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                    confetti.style.width = Math.random() * 8 + 4 + 'px';
+                    confetti.style.height = confetti.style.width;
+                } else {
+                    confetti.textContent = confettiShapes[Math.floor(Math.random() * confettiShapes.length)];
+                    confetti.style.fontSize = Math.random() * 20 + 15 + 'px';
+                }
+                
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-20px';
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                document.body.appendChild(confetti);
+                
+                // Animate confetti falling
+                let position = -20;
+                let rotation = Math.random() * 360;
+                const speed = Math.random() * 3 + 2;
+                const rotationSpeed = Math.random() * 6 - 3;
+                
+                const fall = setInterval(() => {
+                    position += speed;
+                    rotation += rotationSpeed;
+                    confetti.style.top = position + 'px';
+                    confetti.style.transform = `rotate(${rotation}deg)`;
+                    
+                    if (position > window.innerHeight + 20) {
+                        clearInterval(fall);
+                        confetti.remove();
+                    }
+                }, 16);
+            }
+        }
+
+        // Confetti button event
+        document.getElementById('confettiBtn').addEventListener('click', createConfetti);
+
+        // Gift modal
+        document.getElementById('giftBtn').addEventListener('click', function() {
+            document.getElementById('giftModal').style.display = 'flex';
+        });
+
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('giftModal').style.display = 'none';
+        });
+
+        document.getElementById('giftModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+        // Playlist button (placeholder - add your Spotify playlist URL)
+        document.getElementById('playlistBtn').addEventListener('click', function() {
+            // Replace with your actual Spotify playlist URL
+            const playlistUrl = 'https://open.spotify.com/playlist/0bgrRDNCEYhLZeY9s22RyG?si=58c5432b891747f5';
+            window.open(playlistUrl, '_blank');
+        });
+
+        // Close card functionality
+        document.getElementById('closeCardBtn').addEventListener('click', function() {
+            const card = document.getElementById('birthdayCard');
+            const goodbyeMessage = document.getElementById('goodbyeMessage');
+            
+            card.style.transform = 'scale(0.8)';
+            card.style.opacity = '0';
+            
+            setTimeout(() => {
+                card.style.display = 'none';
+                goodbyeMessage.classList.add('show');
+            }, 800);
+        });
+
+        // Add some sparkle animations on load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                createConfetti();
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
